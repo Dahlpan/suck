@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <title>Onsdagsligan</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background-color: #f3f6fb;
+      color: #222;
+      margin: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #002b5c;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      border: 1px solid #d0d7e1;
+    }
+
+    thead th {
+      text-align: center;
+      vertical-align: middle;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 8px 10px;
+      white-space: nowrap;
+      border-right: 1px solid #335a8a;
+    }
+
+    thead tr:first-child th {
+      background: linear-gradient(180deg, #0057b8 0%, #003b7a 100%);
+      color: #fff;
+      font-size: 0.95rem;
+      border-bottom: 1px solid #ffffff33;
+    }
+
+    thead tr:nth-child(2) th {
+      background: linear-gradient(180deg, #004080 0%, #002b5c 100%);
+      color: #ffffff;
+      font-weight: 500;
+      font-size: 0.85rem;
+    }
+
+    th:first-child {
+      background: #002b5c;
+      color: #fff;
+      border-right: 1px solid #335a8a;
+    }
+
+    tbody td {
+      background-color: #ffffff;
+      text-align: center;
+      vertical-align: middle;
+      padding: 6px 6px;
+      border-bottom: 1px solid #d0d7e1;
+      border-right: 1px solid #e1e6ef;
+      font-size: 0.95rem;
+    }
+
+    tbody td:first-child {
+      font-weight: 600;
+      text-align: left;
+      color: #002b5c;
+      padding-left: 10px;
+      white-space: nowrap;
+      min-width: 100px;
+    }
+
+    tbody tr:nth-child(even) td {
+      background-color: #f9fbfe;
+    }
+
+    tbody tr:hover td {
+      background-color: #e8f1ff;
+      transition: background-color 0.15s ease-in-out;
+    }
+
+    td:last-child {
+      font-weight: 700;
+      color: #004080;
+      background-color: #eef4ff;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Tabell</h1>
+
+  <table id="onsdagsligan">
+    <thead id="thead"></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <!-- 📄 Klistra in CSV-innehåll här -->
+  <script id="csv-data" type="text/plain">
+Namn,Okt-1,Okt-8,Okt-15,Okt-22,Okt-29,Nov-5,Nov-12,Nov-19,Nov-26,Dec-3,Dec-10,Dec-17,Jan-7,Jan-14,Jan-21,Jan-28,Feb-4,Feb-11,Feb-18,Feb-25,Tot
+Lars Ahlberg,3,3,3,,,,,,,,,,,,,,,,,,9
+Jacob Hjelmberg,3,2,3,,,,,,,,,,,,,,,,,,8
+Dante Vidin,3,3,1,,,,,,,,,,,,,,,,,,7
+Kristina Söderström,3,3,1,,,,,,,,,,,,,,,,,,7
+Tim Jonsson,1,3,3,,,,,,,,,,,,,,,,,,7
+Johan Solberg,1,3,3,,,,,,,,,,,,,,,,,,7
+Hans Blumentahl,3,,3,,,,,,,,,,,,,,,,,,6
+Jakob Thilman,3,2,1,,,,,,,,,,,,,,,,,,6
+Johan Larsson,1,2,3,,,,,,,,,,,,,,,,,,6
+Thomas Östman,1,2,3,,,,,,,,,,,,,,,,,,6
+Astrid Baldomero Warstrand,,2,3,,,,,,,,,,,,,,,,,,5
+Josep Puigdemont,,2,3,,,,,,,,,,,,,,,,,,5
+Ola Högberg,,2,3,,,,,,,,,,,,,,,,,,5
+Henrik Alexander,3,1,1,,,,,,,,,,,,,,,,,,5
+Stefan Englund,3,1,1,,,,,,,,,,,,,,,,,,5
+Magnus Bjärnlid,1,3,1,,,,,,,,,,,,,,,,,,5
+Filip Lindhfors,3,1,1,,,,,,,,,,,,,,,,,,5
+Jan Gustafsson,1,1,3,,,,,,,,,,,,,,,,,,5
+Melker Brodin,,1,3,,,,,,,,,,,,,,,,,,4
+Johan Runnqvist,1,2,1,,,,,,,,,,,,,,,,,,4
+Sofie Nordlund,1,2,1,,,,,,,,,,,,,,,,,,4
+James Dryburgh,3,,,,,,,,,,,,,,,,,,,,3
+Anders Westerberg,,,3,,,,,,,,,,,,,,,,,,3
+Jonas Torstensson,,,3,,,,,,,,,,,,,,,,,,3
+Gustav Wernerman,,2,1,,,,,,,,,,,,,,,,,,3
+Robin Tjärnlund,,2,,,,,,,,,,,,,,,,,,,2
+Gunnar From,,2,,,,,,,,,,,,,,,,,,,2
+Ruth From,,2,,,,,,,,,,,,,,,,,,,2
+Peder Gustafsson,1,,1,,,,,,,,,,,,,,,,,,2
+Olle Flyg,1,,,,,,,,,,,,,,,,,,,,1
+Mari Wickström,,1,,,,,,,,,,,,,,,,,,,1
+Paul Dahlqvist,,,1,,,,,,,,,,,,,,,,,,1
+Jan Boklöv,,,1,,,,,,,,,,,,,,,,,,1
+Dennis Danielsson,,,1,,,,,,,,,,,,,,,,,,1
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script>
+    const monthNames = {
+      Jan: "Januari", Feb: "Februari", Mar: "Mars", Apr: "April", Maj: "Maj",
+      Jun: "Juni", Jul: "Juli", Aug: "Augusti", Sep: "September",
+      Okt: "Oktober", Nov: "November", Dec: "December"
+    };
+
+    const csvText = document.getElementById("csv-data").textContent.trim();
+    const results = Papa.parse(csvText, { header: true });
+    const data = results.data;
+
+    if (!data.length) {
+      console.error("Ingen data i CSV!");
+    } else {
+      const columns = Object.keys(data[0]);
+      const monthMap = {};
+
+      columns.forEach(col => {
+        if (col === "Namn" || col === "Tot") return;
+        const [shortMonth, day] = col.split("-");
+        const fullMonth = monthNames[shortMonth] || shortMonth;
+        if (!monthMap[fullMonth]) monthMap[fullMonth] = [];
+        monthMap[fullMonth].push(day);
+      });
+
+      // Rubrikrader
+      let monthHeader = "<tr><th rowspan='2'>Namn</th>";
+      let dateHeader = "<tr>";
+
+      Object.keys(monthMap).forEach(month => {
+        monthHeader += `<th colspan="${monthMap[month].length}">${month}</th>`;
+        monthMap[month].forEach(day => {
+          dateHeader += `<th>${day}</th>`;
+        });
+      });
+
+      monthHeader += `<th rowspan='2'>Tot</th></tr>`;
+      dateHeader += "</tr>";
+
+      document.getElementById("thead").innerHTML = monthHeader + dateHeader;
+
+      // Datarader
+      const tbodyHTML = data.map(row => {
+        let rowHTML = `<tr><td>${row["Namn"]}</td>`;
+        Object.keys(monthMap).forEach(month => {
+          monthMap[month].forEach(day => {
+            const shortKey = Object.keys(monthNames).find(k => monthNames[k] === month) + "-" + day;
+            rowHTML += `<td>${row[shortKey] || ""}</td>`;
+          });
+        });
+        rowHTML += `<td>${row["Tot"] || ""}</td></tr>`;
+        return rowHTML;
+      }).join('');
+
+      document.getElementById("tbody").innerHTML = tbodyHTML;
+    }
+  </script>
+</body>
+</html>
