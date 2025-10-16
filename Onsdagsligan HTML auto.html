@@ -106,7 +106,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script>
-    const CSV_URL = "https://raw.githubusercontent.com/Dahlpan/suck/refs/heads/main/onsdagsligan25-26.csv"; // 👉 Byt ut denna till din riktiga raw-URL
+    const CSV_URL = "https://raw.githubusercontent.com/Dahlpan/suck/refs/heads/main/onsdagsligan25-26.csv";
 
     const monthNames = {
       Jan: "Januari", Feb: "Februari", Mar: "Mars", Apr: "April", Maj: "Maj",
@@ -114,6 +114,7 @@
       Okt: "Oktober", Nov: "November", Dec: "December"
     };
 
+    // ⬇⬇⬇ Här är snabbfixen ⬇⬇⬇
     fetch(`${CSV_URL}?v=${Date.now()}`, { cache: "no-store" })
       .then(response => {
         if (!response.ok) throw new Error("Kunde inte hämta CSV");
